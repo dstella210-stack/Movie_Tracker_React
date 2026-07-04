@@ -1,7 +1,7 @@
 
 function LandingCard({onStartReview}) {
     return (
-        <section className="flex justify-center items-center mt-20 bg-gray-900 text-white p-6 rounded-lg shadow-lg">
+        <section className="flex justify-center items-center mt-20 text-white p-6 rounded-lg shadow-lg">
             <div className="w-full max-w-2xl p-[2px] rounded-xl bg-gradient-to-r from-green-500 via-blue-500 to-purple-500">
                 <div className="rounded-xl p-10 text-center bg-gray-900">
                     <h2> Review your latest watch!</h2>
