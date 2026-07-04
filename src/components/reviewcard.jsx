@@ -1,6 +1,6 @@
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
-function ReviewCard({ review }) {
+function ReviewCard({ review, onView }) {
   function getStarIcon(star) {
     if (review.rating >= star) {
       return <FaStar />;
@@ -45,6 +45,13 @@ function ReviewCard({ review }) {
         <p className="text-slate-300 mt-4 leading-relaxed">
           {review.review}
         </p>
+        <button
+        type="button"
+        onClick={onView}
+        className="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg font-semibold transition"
+      >
+        View Review
+      </button>
       </div>
     </article>
   );
