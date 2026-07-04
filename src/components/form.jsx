@@ -1,23 +1,24 @@
 import { useState } from "react";
 import StarRating from "./starrating";
+import { getMoviePoster } from "./movieapi.js";
 
 function ReviewForm({ addReview }) {
   const [title, setTitle] = useState("");
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    const poster = await getMoviePoster(title);
 
     const newReview = {
       id: crypto.randomUUID(),
       title: title,
       review: review,
       rating: rating,
-      poster: "",
+      poster: poster,
       date: new Date().toLocaleDateString(),
     };
-
     addReview(newReview);
 
     setTitle("");

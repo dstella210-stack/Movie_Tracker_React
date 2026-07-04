@@ -1,4 +1,5 @@
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+
 function StarRating({ rating, setRating }) {
   function handleClick(star, event) {
     const box = event.currentTarget.getBoundingClientRect();
@@ -13,16 +14,18 @@ function StarRating({ rating, setRating }) {
   }
 
   function getStarDisplay(star) {
-if (rating >= star) {
-    return <FaStar />;
+    if (rating >= star) {
+      return <FaStar />;
+    }
+
+    if (rating === star - 0.5) {
+      return <FaStarHalfAlt />;
+    }
+
+    return <FaRegStar />;
   }
 
-  if (rating === star - 0.5) {
-    return <FaStarHalfAlt />;
-  }
-
-  return <FaRegStar />;
-}
+  return (
     <div>
       <label className="block text-slate-300 mb-3">Rating</label>
 
@@ -41,7 +44,7 @@ if (rating >= star) {
 
       <p className="text-slate-400 mt-2">{rating}/5</p>
     </div>
-  
+  );
 }
 
-export default StarRating;  
+export default StarRating;
