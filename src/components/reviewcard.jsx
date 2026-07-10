@@ -1,60 +1,54 @@
-import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import StarRating from './StarRating'
 
-function ReviewCard({ review, onView }) {
-  function getStarIcon(star) {
-    if (review.rating >= star) {
-      return <FaStar />;
-    }
-
-    if (review.rating === star - 0.5) {
-      return <FaStarHalfAlt />;
-    }
-
-    return <FaRegStar />;
-  }
-
+export default function ReviewCard({ review, onView }) {
   return (
-    <article className="bg-slate-900 border border-slate-700 rounded-xl p-5 flex gap-5 items-start">
-      <div className="w-20 h-28 bg-slate-800 border border-slate-700 rounded-lg shrink-0 overflow-hidden flex items-center justify-center">
+    <article className="group flex gap-6 bg-white/[0.04] border border-white/10 rounded-2xl p-5 hover:bg-white/[0.07] hover:border-white/20 transition-all">
+      {/* Poster */}
+      <div className="shrink-0">
         {review.poster ? (
           <img
             src={review.poster}
             alt={`${review.title} poster`}
-            className="w-full h-full object-cover"
+            className="w-32 h-48 object-cover rounded-xl border border-white/10 shadow-lg"
           />
         ) : (
-          <span className="text-xs text-slate-500 text-center px-2">
-            No Image
-          </span>
+          <div className="w-32 h-48 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center">
+            <span className="text-white/20 text-xs text-center px-2">
+              No Image
+            </span>
+          </div>
         )}
       </div>
 
-      <div className="flex-1">
-        <h3 className="text-xl font-bold text-white">{review.title}</h3>
+      {/* Content */}
+      <div className="flex-1 min-w-0 flex flex-col">
+        <div className="flex items-start justify-between gap-4">
+          <h3 className="font-semibold text-white text-xl leading-tight">
+            {review.title}
+          </h3>
 
-        <div className="flex gap-1 text-yellow-400 text-lg mt-2">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <span key={star}>{getStarIcon(star)}</span>
-          ))}
+          <div className="shrink-0">
+            <StarRating rating={review.rating} readonly size="sm" />
+          </div>
         </div>
 
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-white/30 text-xs mt-1">
           {review.rating}/5 · {review.date}
         </p>
 
-        <p className="text-slate-300 mt-4 leading-relaxed">
-          {review.review}
-        </p>
+        {review.review && (
+          <p className="text-white/60 text-sm mt-4 leading-relaxed line-clamp-4">
+            {review.review}
+          </p>
+        )}
+
         <button
-        type="button"
-        onClick={onView}
-        className="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg font-semibold transition"
-      >
-        View Review
-      </button>
+          onClick={onView}
+          className="mt-auto pt-4 text-green-500 hover:text-green-400 text-sm font-medium text-left transition-colors"
+        >
+          Read full review →
+        </button>
       </div>
     </article>
-  );
+  )
 }
-
-export default ReviewCard;

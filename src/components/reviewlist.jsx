@@ -1,36 +1,21 @@
-import { useState } from "react";
-import ReviewCard from "./reviewcard";
-import ReviewModal from "./reviewmodal";
+import { useState } from 'react'
+import ReviewCard from './ReviewCard'
+import ReviewModal from './reviewmodal'
 
-function ReviewList({ reviews }) {
-  const [selectedReview, setSelectedReview] = useState(null);
+export default function ReviewList({ reviews }) {
+  const [selected, setSelected] = useState(null)
+
+  if (reviews.length === 0) return null
 
   return (
-    <section className="max-w-4xl mx-auto mt-12 px-4 pb-12">
-      <h2 className="text-2xl font-bold text-white mb-6">Saved Reviews</h2>
-
-      {reviews.length === 0 ? (
-        <p className="text-slate-400">No reviews saved yet.</p>
-      ) : (
-        <div className="space-y-5">
-          {reviews.map((review) => (
-            <ReviewCard
-              key={review.id}
-              review={review}
-              onView={() => setSelectedReview(review)}
-            />
-          ))}
-        </div>
-      )}
-
-      {selectedReview && (
-        <ReviewModal
-          review={selectedReview}
-          onClose={() => setSelectedReview(null)}
-        />
-      )}
+    <section className="mt-10">
+      <h2 className="text-lg font-bold text-white mb-4">Saved Reviews</h2>
+      <div className="space-y-4">
+        {reviews.map((r) => (
+          <ReviewCard key={r.id} review={r} onView={() => setSelected(r)} />
+        ))}
+      </div>
+      {selected && <ReviewModal review={selected} onClose={() => setSelected(null)} />}
     </section>
-  );
+  )
 }
-
-export default ReviewList;

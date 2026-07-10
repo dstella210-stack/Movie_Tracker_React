@@ -1,15 +1,6 @@
-const API_KEY = "44b11a6b";
+export async function getMoviePoster(movie) {
+    const response = await fetch(`/api/movies/search/${movie}`);
+    const data = await response.json();
 
-export async function getMoviePoster(title) {
-  const response = await fetch(
-    `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${API_KEY}`
-  );
-
-  const data = await response.json();
-
-  if (data.Response === "True" && data.Poster !== "N/A") {
-    return data.Poster;
-  }
-
-  return "";
+    return data;
 }

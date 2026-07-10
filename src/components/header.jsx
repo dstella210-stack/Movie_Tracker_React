@@ -1,12 +1,13 @@
-function Header() {
-    return (
-        <header className=" text-white p-6 \\rounded-lgx`">
-            <h1 className="text-4xl font-bold text-white bg-gray-900">🎬 Movie Tracker and Reviews</h1>
-            <p className=" mt-2 text-white">
-                Keep track of your favorite movies.
-            </p>
-        </header>
-    );
+export default function Header() {
+  return (
+    <header className="border-b border-white/10 bg-black sticky top-0 z-40">
+      <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
+        <span className="text-green-500 text-xl">🎬</span>
+        <div>
+          <h1 className="text-xl font-bold text-white leading-none">Movie Tracker</h1>
+          <p className="text-xs text-white/40 mt-0.5">Keep track of your favorite films</p>
+        </div>
+      </div>
+    </header>
+  )
 }
-
-export default Header;

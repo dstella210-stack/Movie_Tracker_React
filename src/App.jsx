@@ -1,47 +1,30 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useState } from 'react'
+import Header from './components/header'
+import LandingCard from './components/Landing'
+import ReviewForm from './components/form'
+import ReviewList from './components/reviewlist'
 
-import Header from "./components/header.jsx";
-import LandingCard from "./components/Landing.jsx";
-import ReviewForm from "./components/form.jsx";
-import ReviewList from "./components/reviewlist.jsx";
+export default function App() {
+  const [reviews, setReviews] = useState([])
+  const [showForm, setShowForm] = useState(false)
 
-
-function App() {
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [reviews, setReviews] = useState(() => {
-    const savedReviews = localStorage.getItem("reviews");
-
-    if (savedReviews) {
-      return JSON.parse(savedReviews);
-    }
-
-    return [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("reviews", JSON.stringify(reviews));
-  }, [reviews]);
-
-  function addReview(newReview) {
-    setReviews([...reviews, newReview]);
-    setShowReviewForm(false);
+  function addReview(r) {
+    setReviews((prev) => [r, ...prev])
+    setShowForm(false)
   }
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       <Header />
-
-      {showReviewForm ? (
-        <ReviewForm addReview={addReview} />
-      ) : (
-        <>
-          <LandingCard onStartReview={() => setShowReviewForm(true)} />
-          <ReviewList reviews={reviews} />
-        </>
-      )}
-    </main>
-  );
+      <main className="max-w-3xl mx-auto px-4 pb-16">
+        {!showForm && (
+          <LandingCard onStartReview={() => setShowForm(true)} />
+        )}
+        {showForm && (
+          <ReviewForm addReview={addReview} onCancel={() => setShowForm(false)} />
+        )}
+        <ReviewList reviews={reviews} />
+      </main>
+    </div>
+  )
 }
-
-export default App;
