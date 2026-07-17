@@ -1,20 +1,23 @@
 const express = require("express");
-const cors = require("cors");
 require("dotenv").config();
+const { connectRedis } = require("./config/Redis.js");
+const movieRoutes = require("./routes/Movies.js");
+const userRoutes = require("./routes/Users.js").default;
 
 const app = express();
-
-const movieRoutes = require("./routes/movies");
-
-app.use(cors());
 app.use(express.json());
-
 app.use("/api/movies", movieRoutes);
+app.use("/api/users", userRoutes);
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-console.log(process.env.API_KEY);
-
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+connectRedis()
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    })
+    .catch((err) => {
+        console.error("Failed to connect to Redis:", err);
+        process.exit(1);
+    }); 

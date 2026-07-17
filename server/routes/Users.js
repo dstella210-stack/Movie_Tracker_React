@@ -1,7 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const { randomUUID } = require("crypto");
-const { redisClient } = require("../redisClient");
+import express from "express";
+export const router = express.Router();
+import { randomUUID } from "node:crypto";
+import redisClient from "../config/Redis.js";
+
 
 router.get("/", async (req, res) => {
     try {
@@ -16,12 +17,12 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+    console.log("POST /api/users route reached");
     const { name, favoriteGenre } = req.body;
     const id = randomUUID();
     const user = {
         id,
         name: name || "",
-        favoriteGenre: favoriteGenre || "",
         createdAt: new Date().toISOString(),
     };
 
@@ -30,25 +31,7 @@ router.post("/", async (req, res) => {
         await redisClient.rPush("users:ids", id);
         res.status(201).json(user);
     } catch (err) {
-        res.status(502).json({ error: "Could not save the user." });
-    }
-});
-
-router.post("/", async (req, res) => {
-    const { name, favoriteGenre } = req.body;
-    const id = randomUUID();
-    const user = {
-        id,
-        name: name || "",
-        favoriteGenre: favoriteGenre || "",
-        createdAt: new Date().toISOString(),
-    };
-
-    try {
-        await redisClient.hSet(`user:${id}`, user);
-        await redisClient.rPush("users:ids", id);
-        res.status(201).json(user);
-    } catch (err) {
+        console.log("redis save error", err);
         res.status(502).json({ error: "Could not save the user." });
     }
 });
@@ -76,4 +59,4 @@ router.post("/active", async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
