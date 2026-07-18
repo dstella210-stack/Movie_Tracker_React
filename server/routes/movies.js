@@ -12,7 +12,7 @@ router.get("/search/:movie", async (req, res) => {
         const data = await response.json();
         res.json(data);
     } catch (err) {
-        res.status(500).json({ error: "Couldn't fetch movie." });
+        res.status(502).json({ error: "Couldn't fetch movie." });
     }
 });
 

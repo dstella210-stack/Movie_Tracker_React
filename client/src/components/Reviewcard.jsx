@@ -27,7 +27,7 @@ export default function ReviewCard({ review, onView }) {
             {review.title}
           </h3>
 
-          <div className="shrink-0">
+          <div className="shrink-0 ml-3">
             <StarRating rating={review.rating} readonly size="sm" />
           </div>
         </div>

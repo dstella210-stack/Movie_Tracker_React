@@ -1,3 +1,4 @@
+//users.js
 import express from "express";
 export const router = express.Router();
 import { randomUUID } from "node:crypto";
@@ -18,11 +19,13 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
     console.log("POST /api/users route reached");
-    const { name, favoriteGenre } = req.body;
+    const { name, username, password} = req.body;
     const id = randomUUID();
     const user = {
         id,
         name: name || "",
+        username: username || "",
+        password: password || "",  
         createdAt: new Date().toISOString(),
     };
 
