@@ -1,6 +1,7 @@
 import { useState } from "react";
-import ReviewCard from "./ReviewCard";
+import ReviewCard from "./Reviewcard";
 import ReviewModal from "./ReviewModal";
+import posthog from "../posthog";
 
 export default function ReviewList({ reviews, onLog }) {
   const [selected, setSelected] = useState(null);
@@ -19,7 +20,10 @@ export default function ReviewList({ reviews, onLog }) {
         </div>
 
         <button
-          onClick={onLog}
+          onClick={() => {
+            posthog.capture('log_film_clicked')
+            if (onLog) onLog()
+          }}
           className="text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-lg border border-[#222] text-gray-500 transition-colors hover:text-white"
         >
           + Log film
@@ -31,7 +35,10 @@ export default function ReviewList({ reviews, onLog }) {
           <ReviewCard
             key={review.id}
             review={review}
-            onView={() => setSelected(review)}
+            onView={() => {
+              posthog.capture('review_viewed', { rating: review.rating })
+              setSelected(review)
+            }}
           />
         ))}
       </div>
