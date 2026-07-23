@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import Header from './components/header'
+import Header from './components/Header'
 import LandingCard from './components/Landing'
-import ReviewForm from './components/form'
-import ReviewList from './components/reviewlist'
+import ReviewForm from './components/Form'
+import ReviewList from './components/Reviewlist'
 import CreateProfilePopup from './components/createProfilePopup'
 import { fetchActiveUser } from './userApi'
+import posthog from './posthog'
 
 export default function App() {
   const [reviews, setReviews] = useState([])
@@ -17,7 +18,12 @@ export default function App() {
 
   useEffect(() => {
     fetchActiveUser()
-      .then(setActiveUser)
+      .then((user) => {
+        setActiveUser(user)
+        if (user?.id) {
+          posthog.identify(String(user.id), { username: user.username })
+        }
+      })
       .catch(() =>
         setUserLoadError(
           'Could not reach the server to load user.'
@@ -35,11 +41,21 @@ export default function App() {
     setShowProfilePopup(false)
   }
 
+  function handleStartReview() {
+    setShowForm(true)
+    posthog.capture('review_form_opened')
+  }
+
+  function handleCreateProfileClick() {
+    setShowProfilePopup(true)
+    posthog.capture('create_profile_popup_opened')
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Header
         activeUser={activeUser}
-        onCreateProfile={() => setShowProfilePopup(true)}
+        onCreateProfile={handleCreateProfileClick}
       />
 
       <main className="max-w-3xl mx-auto px-4 pb-16">
@@ -52,7 +68,7 @@ export default function App() {
 
         {!showForm && (
           <LandingCard
-            onStartReview={() => setShowForm(true)}
+            onStartReview={handleStartReview}
           />
         )}
 
