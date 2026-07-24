@@ -1,4 +1,4 @@
-import StarRating from './StarRating'
+import StarRating from './Starrating'
 
 export default function ReviewCard({ review, onView }) {
   return (

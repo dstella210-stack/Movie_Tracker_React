@@ -1,6 +1,7 @@
 import { useState } from "react";
-import ReviewCard from "./ReviewCard";
+import ReviewCard from "./Reviewcard";
 import ReviewModal from "./ReviewModal";
+import posthog from "../posthog.js";
 
 export default function ReviewList({ reviews, onLog }) {
   const [selected, setSelected] = useState(null);
@@ -31,7 +32,10 @@ export default function ReviewList({ reviews, onLog }) {
           <ReviewCard
             key={review.id}
             review={review}
-            onView={() => setSelected(review)}
+            onView={() => {
+              posthog.capture('review_opened', { rating: review.rating })
+              setSelected(review)
+            }}
           />
         ))}
       </div>
@@ -39,7 +43,10 @@ export default function ReviewList({ reviews, onLog }) {
       {selected && (
         <ReviewModal
           review={selected}
-          onClose={() => setSelected(null)}
+          onClose={() => {
+            posthog.capture('review_modal_closed')
+            setSelected(null)
+          }}
         />
       )}
     </section>

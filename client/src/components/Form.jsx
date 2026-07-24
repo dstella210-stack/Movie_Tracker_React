@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import StarRating from './StarRating'
+import StarRating from './Starrating'
 import { getMoviePoster } from './Movieapi.js'
+import posthog from '../posthog.js'
 
 export default function ReviewForm({ addReview, onCancel }) {
   const [title, setTitle] = useState('')
@@ -28,7 +29,15 @@ export default function ReviewForm({ addReview, onCancel }) {
         poster: movie?.Poster,
         date: new Date().toLocaleDateString(),
       })
+
+      posthog.capture('review_submitted', {
+        rating,
+        has_written_review: review.trim().length > 0,
+        has_poster: !!movie?.Poster,
+      })
     } catch (error) {
+      posthog.captureException(error, { event: 'review_submission_failed' })
+      posthog.capture('review_submission_failed')
       setSubmitError('The movie could not be saved. Check the title or server connection and try again.')
     } finally {
       setLoading(false)
@@ -108,7 +117,10 @@ export default function ReviewForm({ addReview, onCancel }) {
           <div className="flex flex-col-reverse gap-3 border-t border-white/10 pt-6 sm:flex-row sm:justify-end">
             <button
               type="button"
-              onClick={onCancel}
+              onClick={() => {
+                posthog.capture('review_form_cancelled')
+                onCancel()
+              }}
               className="rounded-xl border border-white/10 px-5 py-3 text-sm font-semibold text-white/55 transition hover:border-white/20 hover:bg-white/5 hover:text-white"
             >
               Cancel

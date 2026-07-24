@@ -1,3 +1,5 @@
+import posthog from '../posthog.js'
+
 export default function Header({ activeUser, onCreateProfile }) {
   return (
     <header className="border-b border-white/10 bg-black sticky top-0 z-40">
@@ -28,7 +30,10 @@ export default function Header({ activeUser, onCreateProfile }) {
           </div>
         ) : (
           <button
-            onClick={onCreateProfile}
+            onClick={() => {
+              posthog.capture('profile_creation_started')
+              onCreateProfile()
+            }}
             className="rounded-lg bg-green-500 px-4 py-2 font-semibold text-black transition hover:bg-green-400"
           >
             Create Profile

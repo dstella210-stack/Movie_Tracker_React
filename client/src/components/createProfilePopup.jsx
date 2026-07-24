@@ -1,5 +1,6 @@
-import { createUser } from '../userApi' 
+import { createUser } from '../userApi'
 import { useState } from 'react'
+import posthog from '../posthog.js'
 
 export default function CreateProfilePopup({
   onClose,
@@ -24,18 +25,27 @@ export default function CreateProfilePopup({
         password,
       )
 
+      posthog.identify(String(user.id), { username: user.username })
+      posthog.capture('profile_created')
       onProfileCreated(user)
     } catch (error) {
+      posthog.captureException(error, { event: 'profile_creation_failed' })
+      posthog.capture('profile_creation_failed')
       setError(error.message)
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  function handleClose() {
+    posthog.capture('profile_creation_cancelled')
+    onClose()
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
         className="w-full max-w-sm rounded-xl border border-white/10 bg-zinc-950 p-6 shadow-2xl"
@@ -54,7 +64,7 @@ export default function CreateProfilePopup({
 
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="rounded px-2 text-xl text-white/40 hover:bg-white/10 hover:text-white"
           >
             ×
@@ -120,7 +130,7 @@ export default function CreateProfilePopup({
           <div className="flex gap-3 pt-2">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="flex-1 rounded-lg border border-white/10 px-4 py-3 text-sm font-semibold text-white/70 hover:bg-white/5"
             >
               Cancel

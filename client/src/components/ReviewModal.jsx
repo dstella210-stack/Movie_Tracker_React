@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import StarRating from './StarRating'
+import StarRating from './Starrating'
 
 export default function ReviewModal({ review, onClose }) {
   useEffect(() => {

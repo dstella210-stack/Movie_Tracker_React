@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import Header from './components/header'
+import Header from './components/Header'
 import LandingCard from './components/Landing'
-import ReviewForm from './components/form'
-import ReviewList from './components/reviewlist'
+import ReviewForm from './components/Form'
+import ReviewList from './components/Reviewlist'
 import CreateProfilePopup from './components/createProfilePopup'
 import { fetchActiveUser } from './userApi'
+import posthog from './posthog.js'
 
 export default function App() {
   const [reviews, setReviews] = useState([])
@@ -17,12 +18,19 @@ export default function App() {
 
   useEffect(() => {
     fetchActiveUser()
-      .then(setActiveUser)
-      .catch(() =>
+      .then((user) => {
+        setActiveUser(user)
+        if (user?.id) {
+          posthog.identify(String(user.id), { username: user.username })
+        }
+      })
+      .catch((error) => {
+        posthog.captureException(error, { event: 'user_load_failed' })
+        posthog.capture('user_load_failed')
         setUserLoadError(
           'Could not reach the server to load user.'
         )
-      )
+      })
   }, [])
 
   function addReview(review) {
